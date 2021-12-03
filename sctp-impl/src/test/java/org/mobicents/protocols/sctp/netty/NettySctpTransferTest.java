@@ -100,7 +100,7 @@ public class NettySctpTransferTest {
 //		this.management.setSingleThread(true);
 		this.management.start();
         this.management.setConnectDelay(10000);// Try connecting every 10 secs
-		this.management.removeAllResourses();
+		this.management.removeAllResources();
 
 		this.server = (NettyServerImpl)this.management.addServer(SERVER_NAME, SERVER_HOST, SERVER_PORT, ipChannelType, false, 0, null);
 		this.serverAssociation = (NettyAssociationImpl)this.management.addServerAssociation(CLIENT_HOST, CLIENT_PORT, SERVER_NAME, SERVER_ASSOCIATION_NAME, ipChannelType);

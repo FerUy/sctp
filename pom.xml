@@ -9,25 +9,26 @@
 
 	<groupId>org.mobicents.protocols.sctp</groupId>
 	<artifactId>sctp-parent</artifactId>
-	<version>2.0.0-SNAPSHOT</version>
+	<version>2.0.2-SNAPSHOT</version>
 	<name>Restcomm :: SCTP :: Parent :: ${pom.artifactId}</name>
 	<packaging>pom</packaging>
-
 
 	<properties>
 		<log4j.version>1.2.8</log4j.version>
 		<javolution.version>5.5.1</javolution.version>
 		<commons.version>1.0.0.CR1</commons.version>
 		<testng.version>6.2</testng.version>
-		<netty.version>4.0.33.Final</netty.version>
-		<compiler.plugin.version>2.0.2</compiler.plugin.version>
-		<compile.source>1.7</compile.source>
+		<netty.version>4.0.36.Final</netty.version>
+		<compiler.plugin.version>3.8.1</compiler.plugin.version>
+		<compile.source>11</compile.source>
 
 	</properties>
+
 	<modules>
 		<module>sctp-api</module>
 		<module>sctp-impl</module>
 	</modules>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -100,7 +101,7 @@
 							</execution>
 						</executions>
 					</plugin>
-					<plugin>
+					<!--plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-source-plugin</artifactId>
 						<version>2.1.2</version>
@@ -113,7 +114,7 @@
 								</goals>
 							</execution>
 						</executions>
-					</plugin>
+					</plugin-->
 				</plugins>
 			</build>
 		</profile>
@@ -183,7 +184,34 @@
 					<debug>${compile.debug}</debug>
 				</configuration>
 			</plugin>
-
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>3.0.0-M1</version>
+				<executions>
+					<execution>
+						<id>default-deploy</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.7</version>
+				<extensions>true</extensions>
+				<executions>
+					<execution>
+						<id>deploy-to-sonatype</id>
+						<phase>none</phase>
+					</execution>
+				</executions>
+				<configuration combine.self="override">
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 

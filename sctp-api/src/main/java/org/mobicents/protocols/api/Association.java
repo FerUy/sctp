@@ -24,15 +24,13 @@ package org.mobicents.protocols.api;
 
 import io.netty.buffer.ByteBufAllocator;
 
-
-
 /**
  * <p>
  * A protocol relationship between endpoints
  * </p>
  * <p>
  * The implementation of this interface is actual wrapper over Socket that
- * know's how to communicate with peer. The user of Association shouldn't care
+ * knows how to communicate with peer. The user of Association shouldn't care
  * if the underlying Socket is client or server side
  * </p>
  * <p>

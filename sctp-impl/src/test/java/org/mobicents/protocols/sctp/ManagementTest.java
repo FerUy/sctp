@@ -98,7 +98,7 @@ public class ManagementTest {
 		ManagementImpl management = new ManagementImpl("ManagementTest");
 		management.setSingleThread(true);
 		management.start();
-		management.removeAllResourses();
+		management.removeAllResources();
 
 		String[] arr = new String[]{"127.0.0.2", "127.0.0.3"};
 		Server server = management.addServer(SERVER_NAME, SERVER_HOST, SERVER_PORT, ipChannelType, true, 5, arr);
@@ -164,7 +164,7 @@ public class ManagementTest {
 		ManagementImpl management = new ManagementImpl("ManagementTest");
 		management.setSingleThread(true);
 		management.start();
-		management.removeAllResourses();
+		management.removeAllResources();
 
 		// Add association
 		String[] arr = new String[]{"127.0.0.2", "127.0.0.3"};
@@ -232,7 +232,7 @@ public class ManagementTest {
 		management.setSingleThread(true);
 		management.start();
         management.setConnectDelay(10000);// Try connecting every 10 secs
-		management.removeAllResourses();
+		management.removeAllResources();
 
 		management.addServer(SERVER_NAME, SERVER_HOST, SERVER_PORT, ipChannelType, false, 0, null);
 		Association serverAssociation = management.addServerAssociation(CLIENT_HOST, CLIENT_PORT, SERVER_NAME, SERVER_ASSOCIATION_NAME, ipChannelType);

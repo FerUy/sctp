@@ -31,8 +31,8 @@ import org.mobicents.protocols.api.PayloadData;
 public class Worker implements Runnable {
 
 	private AssociationImpl association;
-	private AssociationListener associationListener = null;
-	private PayloadData payloadData = null;
+	private AssociationListener associationListener;
+	private PayloadData payloadData;
 
 	/**
 	 * @param association

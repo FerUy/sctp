@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.sun.nio.sctp.SctpStandardSocketOptions;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 
@@ -48,6 +49,8 @@ import com.sun.nio.sctp.AssociationChangeNotification;
 import com.sun.nio.sctp.AssociationChangeNotification.AssocChangeEvent;
 import com.sun.nio.sctp.SctpChannel;
 import com.sun.nio.sctp.SctpServerChannel;
+
+import static java.lang.System.currentTimeMillis;
 
 /**
  * @author amit bhayani
@@ -116,7 +119,7 @@ public class SelectorThread implements Runnable {
 								// if Association is stopped - remove pending connection requests  
 								pendingChanges.remove(change);
 							} else {
-								if (change.getExecutionTime() <= System.currentTimeMillis()) {
+								if (change.getExecutionTime() <= currentTimeMillis()) {
 									pendingChanges.remove(change);
 									change.getAssociation().initiateConnection();
 								}
@@ -174,7 +177,7 @@ public class SelectorThread implements Runnable {
 		}
 	}
 
-	private void accept(SelectionKey key) throws IOException{
+	private void accept(SelectionKey key) throws IOException {
 		if (key.channel() instanceof ServerSocketChannel)
 			this.acceptTcp(key);
 		else
@@ -248,7 +251,7 @@ public class SelectorThread implements Runnable {
 								provisioned = true;
 
 								if (!association.isStarted()) {
-									logger.error(String.format("Received connect request for Association=%s but not started yet. Droping the connection! ",
+									logger.error(String.format("Received connect request for Association=%s but not started yet. Dropping the connection! ",
 											association.getName()));
 									socketChannel.close();
 									break;
@@ -258,6 +261,15 @@ public class SelectorThread implements Runnable {
 
 								// Accept the connection and make it non-blocking
 								socketChannel.configureBlocking(false);
+
+								logger.info(String.format("Initial receive buffer SO_RCVBUF: %s and initial send buffer SO_SNDBUF: %s",
+									((SctpChannel)socketChannel).getOption(SctpStandardSocketOptions.SO_RCVBUF),
+									((SctpChannel)socketChannel).getOption(SctpStandardSocketOptions.SO_SNDBUF)));
+								((SctpChannel)socketChannel).setOption(SctpStandardSocketOptions.SO_SNDBUF, new Integer(management.getBufferSize()));
+								((SctpChannel)socketChannel).setOption(SctpStandardSocketOptions.SO_RCVBUF, new Integer(management.getBufferSize()));
+								logger.info(String.format("Configured receive buffer SO_RCVBUF: %s and setting send buffer SO_SNDBUF: %s",
+									((SctpChannel)socketChannel).getOption(SctpStandardSocketOptions.SO_RCVBUF),
+									((SctpChannel)socketChannel).getOption(SctpStandardSocketOptions.SO_SNDBUF)));
 
 								// Register the new SocketChannel with our Selector,
 								// indicating we'd like to be notified when there's data
@@ -307,6 +319,15 @@ public class SelectorThread implements Runnable {
 					// Accept the connection and make it
 					// non-blocking
 					socketChannel.configureBlocking(false);
+
+					logger.info(String.format("Initial receive buffer SO_RCVBUF: %s and initial send buffer SO_SNDBUF: %s",
+						((SctpChannel)socketChannel).getOption(SctpStandardSocketOptions.SO_RCVBUF),
+						((SctpChannel)socketChannel).getOption(SctpStandardSocketOptions.SO_SNDBUF)));
+					((SctpChannel)socketChannel).setOption(SctpStandardSocketOptions.SO_SNDBUF, new Integer(management.getBufferSize()));
+					((SctpChannel)socketChannel).setOption(SctpStandardSocketOptions.SO_RCVBUF, new Integer(management.getBufferSize()));
+					logger.info(String.format("Setting receive buffer SO_RCVBUF: %s and setting send buffer SO_SNDBUF: %s",
+						((SctpChannel)socketChannel).getOption(SctpStandardSocketOptions.SO_RCVBUF),
+						((SctpChannel)socketChannel).getOption(SctpStandardSocketOptions.SO_SNDBUF)));
 
 					try {
 						this.management.getServerListener().onNewRemoteConnection(srv, anonymAssociation);
@@ -369,16 +390,22 @@ public class SelectorThread implements Runnable {
 	}
 
 	private void finishConnectionSctp(SelectionKey key) throws IOException {
-
 		AssociationImpl association = (AssociationImpl) key.attachment();
+
 		try {
 			SctpChannel socketChannel = (SctpChannel) key.channel();
-
 			if (socketChannel.isConnectionPending()) {
-
-				// TODO Loop? Or may be sleep for while?
-				while (socketChannel.isConnectionPending()) {
+				Long connectionStartMilli = currentTimeMillis();
+				while (socketChannel.isConnectionPending() && ((currentTimeMillis() - connectionStartMilli) < 10 * 1000)) {
 					socketChannel.finishConnect();
+				}
+				if (socketChannel.isConnectionPending()) {
+					if (logger.isInfoEnabled()) {
+						logger.warn(String.format("Association=%s gave up after 10 seconds, trying to connect to=%s", association.getName(), socketChannel.getRemoteAddresses()));
+					}
+					socketChannel.close();
+					key.cancel();
+					return;
 				}
 			}
 

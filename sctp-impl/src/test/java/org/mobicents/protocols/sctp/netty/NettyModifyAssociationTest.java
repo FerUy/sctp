@@ -98,7 +98,7 @@ public class NettyModifyAssociationTest {
 		this.management.setSingleThread(true);
 		this.management.start();
         this.management.setConnectDelay(1000);
-		this.management.removeAllResourses();
+		this.management.removeAllResources();
 
 		this.server = (NettyServerImpl) this.management.addServer(SERVER_NAME, SERVER_HOST, serverPort, ipChannelType, false, 0, null);
 		this.serverAssociation = (NettyAssociationImpl) this.management.addServerAssociation(CLIENT_HOST, clientPort, SERVER_NAME, SERVER_ASSOCIATION_NAME, ipChannelType);

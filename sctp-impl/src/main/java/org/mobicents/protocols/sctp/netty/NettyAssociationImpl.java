@@ -67,10 +67,10 @@ public class NettyAssociationImpl implements Association {
     private static final String PEER_ADDRESS = "peerAddress";
     private static final String PEER_PORT = "peerPort";
 
-    private static final String ASSOCIATION_TYPE = "assoctype";
-    private static final String IPCHANNEL_TYPE = "ipChannelType";
+    private static final String ASSOCIATION_TYPE = "associationType";
+    private static final String IP_CHANNEL_TYPE = "ipChannelType";
     private static final String EXTRA_HOST_ADDRESS = "extraHostAddress";
-    private static final String EXTRA_HOST_ADDRESS_SIZE = "extraHostAddresseSize";
+    private static final String EXTRA_HOST_ADDRESSES_SIZE = "extraHostAddressesSize";
 
     private String hostAddress;
     private int hostPort;
@@ -109,19 +109,19 @@ public class NettyAssociationImpl implements Association {
      * @param hostPort
      * @param peerAddress
      * @param peerPort
-     * @param assocName
+     * @param associationName
      * @param ipChannelType
      * @param extraHostAddresses
      * @throws IOException
      */
-    public NettyAssociationImpl(String hostAddress, int hostPort, String peerAddress, int peerPort, String assocName,
+    public NettyAssociationImpl(String hostAddress, int hostPort, String peerAddress, int peerPort, String associationName,
             IpChannelType ipChannelType, String[] extraHostAddresses) throws IOException {
         this();
         this.hostAddress = hostAddress;
         this.hostPort = hostPort;
         this.peerAddress = peerAddress;
         this.peerPort = peerPort;
-        this.name = assocName;
+        this.name = associationName;
         this.ipChannelType = ipChannelType;
         this.extraHostAddresses = extraHostAddresses;
 
@@ -137,8 +137,7 @@ public class NettyAssociationImpl implements Association {
      * @param assocName
      * @param ipChannelType
      */
-    public NettyAssociationImpl(String peerAddress, int peerPort, String serverName, String assocName,
-            IpChannelType ipChannelType) {
+    public NettyAssociationImpl(String peerAddress, int peerPort, String serverName, String assocName, IpChannelType ipChannelType) {
         this();
         this.peerAddress = peerAddress;
         this.peerPort = peerPort;
@@ -153,16 +152,15 @@ public class NettyAssociationImpl implements Association {
     /**
      * Creating an ANONYMOUS_SERVER Association
      * 
-     * @param hostAddress
-     * @param hostPort
+     * @param peerAddress
+     * @param peerPort
      * @param peerAddress
      * @param peerPort
      * @param serverName
-     * @param assocName
      * @param ipChannelType
+     * @param server
      */
-    protected NettyAssociationImpl(String peerAddress, int peerPort, String serverName, IpChannelType ipChannelType,
-            NettyServerImpl server) {
+    protected NettyAssociationImpl(String peerAddress, int peerPort, String serverName, IpChannelType ipChannelType, NettyServerImpl server) {
         this();
         this.peerAddress = peerAddress;
         this.peerPort = peerPort;
@@ -487,7 +485,7 @@ public class NettyAssociationImpl implements Association {
 
     protected void start() throws Exception {
         if (this.associationListener == null) {
-            throw new NullPointerException(String.format("AssociationListener is null for Associatoion=%s", this.name));
+            throw new NullPointerException(String.format("AssociationListener is null for Association=%s", this.name));
         }
 
         if (this.type == AssociationType.CLIENT && this.isFirstStart) {
@@ -704,11 +702,11 @@ public class NettyAssociationImpl implements Association {
 
             association.serverName = xml.getAttribute(SERVER_NAME, "");
             association.ipChannelType = IpChannelType
-                    .getInstance(xml.getAttribute(IPCHANNEL_TYPE, IpChannelType.SCTP.getCode()));
+                    .getInstance(xml.getAttribute(IP_CHANNEL_TYPE, IpChannelType.SCTP.getCode()));
             if (association.ipChannelType == null)
                 association.ipChannelType = IpChannelType.SCTP;
 
-            int extraHostAddressesSize = xml.getAttribute(EXTRA_HOST_ADDRESS_SIZE, 0);
+            int extraHostAddressesSize = xml.getAttribute(EXTRA_HOST_ADDRESSES_SIZE, 0);
             association.extraHostAddresses = new String[extraHostAddressesSize];
 
             for (int i = 0; i < extraHostAddressesSize; i++) {
@@ -729,9 +727,9 @@ public class NettyAssociationImpl implements Association {
             xml.setAttribute(PEER_PORT, association.peerPort);
 
             xml.setAttribute(SERVER_NAME, association.serverName);
-            xml.setAttribute(IPCHANNEL_TYPE, association.ipChannelType.getCode());
+            xml.setAttribute(IP_CHANNEL_TYPE, association.ipChannelType.getCode());
 
-            xml.setAttribute(EXTRA_HOST_ADDRESS_SIZE,
+            xml.setAttribute(EXTRA_HOST_ADDRESSES_SIZE,
                     association.extraHostAddresses != null ? association.extraHostAddresses.length : 0);
             if (association.extraHostAddresses != null) {
                 for (String s : association.extraHostAddresses) {

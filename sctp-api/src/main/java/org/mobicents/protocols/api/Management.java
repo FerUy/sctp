@@ -46,7 +46,7 @@ import java.util.Map;
  * </p>
  * 
  * @author amit bhayani
- * 
+ *
  */
 public interface Management {
 
@@ -79,37 +79,37 @@ public interface Management {
 	/**
 	 * The {@link AssociationListener} to be registered for this Association
 	 * 
-	 * @param associationListener
+	 * @param serverListener
 	 */
 	public void setServerListener(ServerListener serverListener);
 
 	/**
 	 * Adding ManagementEventListener.
 	 * This listener is notified when adding/removing servers and associations 
-	 * @param listener
+	 * @param managementEventListener
 	 */
-	public void addManagementEventListener(ManagementEventListener listener);
+	public void addManagementEventListener(ManagementEventListener managementEventListener);
 
 	/**
 	 * Removing ManagementEventListener.
 	 * This listener is notified when adding/removing servers and associations 
-	 * @param listener
+	 * @param managementEventListener
 	 */
-	public void removeManagementEventListener(ManagementEventListener listener);
+	public void removeManagementEventListener(ManagementEventListener managementEventListener);
 
     /**
      * Adding CongestionListener.
      * This listener is notified when adding/removing servers and associations 
-     * @param listener
+     * @param congestionListener
      */
-    public void addCongestionListener(CongestionListener listener);
+    public void addCongestionListener(CongestionListener congestionListener);
 
     /**
      * Removing CongestionListener.
      * This listener is notified when adding/removing servers and associations 
-     * @param listener
+     * @param congestionListener
      */
-    public void removeCongestionListener(CongestionListener listener);
+    public void removeCongestionListener(CongestionListener congestionListener);
 
 	/**
 	 * Start the management. No management operation can be executed unless
@@ -123,7 +123,7 @@ public interface Management {
 
 	/**
 	 * Stop the management. It should persist the state of {@link Server} and
-	 * {@link Associtaion}.
+	 * {@link Association}.
 	 * 
 	 * @throws Exception
 	 */
@@ -142,11 +142,11 @@ public interface Management {
 	 * 
 	 * @throws Exception
 	 */
-	public void removeAllResourses() throws Exception;
-	
+	public void removeAllResources() throws Exception;
+
 	/**
 	 * Add new {@link Server}.
-	 * 
+	 *
 	 * @param serverName
 	 *            name of the Server. Should be unique name
 	 * @param hostAddress
@@ -168,7 +168,39 @@ public interface Management {
 	 *             taken or some other server already has same ip:port
 	 */
 	public Server addServer(String serverName, String hostAddress, int port, IpChannelType ipChannelType, boolean acceptAnonymousConnections,
-			int maxConcurrentConnectionsCount, String[] extraHostAddresses) throws Exception;
+							int maxConcurrentConnectionsCount, String[] extraHostAddresses) throws Exception;
+
+	/**
+	 * Add new {@link Server}.
+	 *
+	 * @param serverName
+	 *            name of the Server. Should be unique name
+	 * @param hostAddress
+	 *            IP address that this server will bind to
+	 * @param port
+	 *            port that this server will bind to
+	 * @param ipChannelType
+	 *            IP channel type: SCTP or TCP
+	 * @param acceptAnonymousConnections
+	 *            true: this Server accepts Anonymous connections, false: no
+	 * @param maxConcurrentConnectionsCount
+	 *            A count of concurrent connections that can accept a Server. 0 means an unlimited count.
+	 * @param maxSctpInputStreams
+	 *            Maximum amount of input streams for a particular sctp association
+	 * @param maxSctpOutputStreams
+	 *            Maximum amount of output streams for a particular sctp association
+	 * @param extraHostAddresses
+	 *            When SCTP multi-homing configuration extra IP addresses can be put here
+	 *            If multi-homing absence this parameter can be null
+	 * @return new Server instance
+	 * @throws Exception
+	 *             Exception if management not started or server name already
+	 *             taken or some other server already has same ip:port
+	 */
+	public Server addServer(String serverName, String hostAddress, int port, IpChannelType ipChannelType,
+							boolean acceptAnonymousConnections, int maxConcurrentConnectionsCount,
+							int maxSctpInputStreams, int maxSctpOutputStreams,
+							String[] extraHostAddresses) throws Exception;
 
 	/**
 	 * Add new {@link Server}. Server can not accept anonymous connections.
@@ -236,7 +268,7 @@ public interface Management {
 	 * @throws Exception
 	 *             Exception if no Server found for given name or any of the
 	 *             {@link Association} within Server still started. All the
-	 *             Association's must be stopped before stopping Server
+	 *             Associations must be stopped before stopping Server
 	 */
 	public void stopServer(String serverName) throws Exception;
 
@@ -258,12 +290,12 @@ public interface Management {
 	 *            from
 	 * @param serverName
 	 *            the Server that this association belongs to
-	 * @param assocName
+	 * @param associationName
 	 *            unique name of Association
 	 * @return
 	 * @throws Exception
 	 */
-	public Association addServerAssociation(String peerAddress, int peerPort, String serverName, String assocName) throws Exception;
+	public Association addServerAssociation(String peerAddress, int peerPort, String serverName, String associationName) throws Exception;
 
 	/**
 	 * Add server Association. IP channel type is SCTP.
@@ -294,11 +326,11 @@ public interface Management {
 	 * 		If hostPort==0 this mean the local port will be any vacant port
 	 * @param peerAddress
 	 * @param peerPort
-	 * @param assocName
-	 * @return
+	 * @param associationName
+	 * @return Association
 	 * @throws Exception
 	 */
-	public Association addAssociation(String hostAddress, int hostPort, String peerAddress, int peerPort, String assocName)
+	public Association addAssociation(String hostAddress, int hostPort, String peerAddress, int peerPort, String associationName)
 			throws Exception;
 
 	/**
@@ -309,35 +341,35 @@ public interface Management {
 	 * 		If hostPort==0 this mean the local port will be any vacant port
 	 * @param peerAddress
 	 * @param peerPort
-	 * @param assocName
+	 * @param associationName
 	 * @param ipChannelType
 	 *            IP channel type: SCTP or TCP
 	 * @param extraHostAddresses
 	 *            When SCTP multi-homing configuration extra IP addresses can be put here
 	 *            If multi-homing absence this parameter can be null 
-	 * @return
+	 * @return Association
 	 * @throws Exception
 	 */
-	public Association addAssociation(String hostAddress, int hostPort, String peerAddress, int peerPort, String assocName, IpChannelType ipChannelType,
+	public Association addAssociation(String hostAddress, int hostPort, String peerAddress, int peerPort, String associationName, IpChannelType ipChannelType,
 			String[] extraHostAddresses) throws Exception;
 
 	/**
 	 * Remove existing Association. Association should be stopped before
 	 * removing
 	 * 
-	 * @param assocName
+	 * @param associationName
 	 * @throws Exception
 	 */
-	public void removeAssociation(String assocName) throws Exception;
+	public void removeAssociation(String associationName) throws Exception;
 
 	/**
 	 * Get existing Association for passed name
 	 * 
-	 * @param assocName
-	 * @return
+	 * @param associationName
+	 * @return Association
 	 * @throws Exception
 	 */
-	public Association getAssociation(String assocName) throws Exception;
+	public Association getAssociation(String associationName) throws Exception;
 
 	/**
 	 * Get configured Association map with name as key and Association instance
@@ -350,18 +382,18 @@ public interface Management {
 	/**
 	 * Start the existing Association
 	 * 
-	 * @param assocName
+	 * @param associationName
 	 * @throws Exception
 	 */
-	public void startAssociation(String assocName) throws Exception;
+	public void startAssociation(String associationName) throws Exception;
 
 	/**
 	 * Stop the existing Association
 	 * 
-	 * @param assocName
+	 * @param associationName
 	 * @throws Exception
 	 */
-	public void stopAssociation(String assocName) throws Exception;
+	public void stopAssociation(String associationName) throws Exception;
 
 	/**
 	 * Get connection delay. If the client side {@link Association} dies due to
@@ -443,10 +475,10 @@ public interface Management {
      * CongControl_DelayThreshold, the Association's congestion level becomes to 1, 2 or 3. Array must have 3 values.
      * Threshold 1.
      * 
-     * @param val
+     * @param delayThreshold
      * @throws Exception
      */
-    public void setCongControl_DelayThreshold_1(double val) throws Exception;
+    public void setCongControl_DelayThreshold_1(double delayThreshold) throws Exception;
 
     /**
      * For outgoing messages congestion control we need to have 3 thresholds - delays of outgoing messages before it will be
@@ -454,10 +486,10 @@ public interface Management {
      * CongControl_DelayThreshold, the Association's congestion level becomes to 1, 2 or 3. Array must have 3 values.
      * Threshold 2.
      * 
-     * @param val
+     * @param delayThreshold
      * @throws Exception
      */
-    public void setCongControl_DelayThreshold_2(double val) throws Exception;
+    public void setCongControl_DelayThreshold_2(double delayThreshold) throws Exception;
 
     /**
      * For outgoing messages congestion control we need to have 3 thresholds - delays of outgoing messages before it will be
@@ -465,10 +497,10 @@ public interface Management {
      * CongControl_DelayThreshold, the Association's congestion level becomes to 1, 2 or 3. Array must have 3 values.
      * Threshold 3.
      * 
-     * @param val
+     * @param delayThreshold
      * @throws Exception
      */
-    public void setCongControl_DelayThreshold_3(double val) throws Exception;
+    public void setCongControl_DelayThreshold_3(double delayThreshold) throws Exception;
 
     /**
      * For outgoing messages congestion control we need to have 3 thresholds - delays of outgoing messages before it will be
@@ -507,10 +539,10 @@ public interface Management {
      * values.
      * Threshold 1.
      * 
-     * @param val
+     * @param backToNormalDelayThreshold
      * @throws Exception
      */
-    public void setCongControl_BackToNormalDelayThreshold_1(double val) throws Exception;
+    public void setCongControl_BackToNormalDelayThreshold_1(double backToNormalDelayThreshold) throws Exception;
 
     /**
      * For outgoing messages congestion control we need to have 3 thresholds - delays of outgoing messages before it will be
@@ -519,10 +551,10 @@ public interface Management {
      * values.
      * Threshold 2.
      * 
-     * @param val
+     * @param backToNormalDelayThreshold
      * @throws Exception
      */
-    public void setCongControl_BackToNormalDelayThreshold_2(double val) throws Exception;
+    public void setCongControl_BackToNormalDelayThreshold_2(double backToNormalDelayThreshold) throws Exception;
 
     /**
      * For outgoing messages congestion control we need to have 3 thresholds - delays of outgoing messages before it will be
@@ -531,10 +563,10 @@ public interface Management {
      * values.
      * Threshold 3.
      * 
-     * @param val
+     * @param backToNormalDelayThreshold
      * @throws Exception
      */
-    public void setCongControl_BackToNormalDelayThreshold_3(double val) throws Exception;
+    public void setCongControl_BackToNormalDelayThreshold_3(double backToNormalDelayThreshold) throws Exception;
 
     /**
      * SCTP option: Enables or disables message fragmentation.
@@ -624,9 +656,9 @@ public interface Management {
      * The value of this socket option is a Boolean that represents whether the option is enabled or disabled.
      * SCTP uses an algorithm like The Nagle Algorithm to coalesce short segments and improve network efficiency.
      *
-     * @param optionSctpNodelay
+     * @param optionSctpNoDelay
      */
-    public void setOptionSctpNodelay(Boolean optionSctpNodelay);
+    public void setOptionSctpNodelay(Boolean optionSctpNoDelay);
 
     /**
      * SCTP option: The size of the socket send buffer.
@@ -737,14 +769,14 @@ public interface Management {
 	 *            from
 	 * @param serverName
 	 *            the Server that this association belongs to
-	 * @param assocName
+	 * @param associationName
 	 *            name of Association which will be modified
 	 * @param ipChannelType
 	 *            IP channel type: SCTP or TCP
 	 * @return
 	 * @throws Exception
 	 */
-    public void modifyServerAssociation(String assocName, String peerAddress, Integer peerPort, String serverName, IpChannelType ipChannelType) throws Exception;
+    public void modifyServerAssociation(String associationName, String peerAddress, Integer peerPort, String serverName, IpChannelType ipChannelType) throws Exception;
     
     /**
 	 * Modify Association
@@ -754,7 +786,7 @@ public interface Management {
 	 * 		If hostPort==0 this mean the local port will be any vacant port
 	 * @param peerAddress
 	 * @param peerPort
-	 * @param assocName
+	 * @param associationName
 	 * @param ipChannelType
 	 *            IP channel type: SCTP or TCP
 	 * @param extraHostAddresses
@@ -763,7 +795,7 @@ public interface Management {
 	 * @return
 	 * @throws Exception
 	 */
-	public void modifyAssociation(String hostAddress, Integer hostPort, String peerAddress, Integer peerPort, String assocName, IpChannelType ipChannelType,
+	public void modifyAssociation(String hostAddress, Integer hostPort, String peerAddress, Integer peerPort, String associationName, IpChannelType ipChannelType,
 			String[] extraHostAddresses) throws Exception;
 
 }

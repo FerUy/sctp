@@ -135,7 +135,7 @@ public class NettySctpChannelInboundHandlerAdapter extends ChannelInboundHandler
 //                    }
                     break;
                 default:
-                    logger.warn(String.format("Received unkown Event=%s for Association=%s", not.event(), association.getName()));
+                    logger.warn(String.format("Received unknown Event=%s for Association=%s", not.event(), association.getName()));
                     break;
             }
         }
@@ -246,7 +246,7 @@ public class NettySctpChannelInboundHandlerAdapter extends ChannelInboundHandler
             try {
                 ch.close().sync();
             } catch (InterruptedException e) {
-                logger.error(String.format("Error while trying to close Channel for Associtaion %s",
+                logger.error(String.format("Error while trying to close Channel for Association %s",
                         this.association.getName(), e));
             }
         }

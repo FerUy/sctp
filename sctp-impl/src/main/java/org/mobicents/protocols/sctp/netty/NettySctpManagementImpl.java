@@ -441,10 +441,10 @@ public class NettySctpManagementImpl implements Management {
     /*
      * (non-Javadoc)
      * 
-     * @see org.mobicents.protocols.api.Management#removeAllResourses()
+     * @see org.mobicents.protocols.api.Management#removeAllResources()
      */
     @Override
-    public void removeAllResourses() throws Exception {
+    public void removeAllResources() throws Exception {
         synchronized (this) {
             if (!this.started) {
                 throw new Exception(String.format("Management=%s not started", this.name));
@@ -524,7 +524,7 @@ public class NettySctpManagementImpl implements Management {
             for (FastList.Node<Server> n = this.servers.head(), end = this.servers.tail(); (n = n.getNext()) != end;) {
                 Server serverTemp = n.getValue();
                 if (serverName.equals(serverTemp.getName())) {
-                    throw new Exception(String.format("Server name=%s already exist", serverName));
+                    throw new Exception(String.format("Server name=%s already exists", serverName));
                 }
 
                 if (hostAddress.equals(serverTemp.getHostAddress()) && port == serverTemp.getHostport()) {
@@ -559,6 +559,14 @@ public class NettySctpManagementImpl implements Management {
 
             return server;
         }
+    }
+
+    @Override
+    public Server addServer(String serverName, String hostAddress, int port, IpChannelType ipChannelType,
+                            boolean acceptAnonymousConnections, int maxConcurrentConnectionsCount,
+                            int maxSctpInputStreams, int maxSctpOutputStreams, String[] extraHostAddresses)
+        throws Exception {
+        return null;
     }
 
     /*
@@ -669,7 +677,7 @@ public class NettySctpManagementImpl implements Management {
             }
         }
 
-        throw new Exception(String.format("No Server foubd with name=%s", serverName));
+        throw new Exception(String.format("No Server found with name=%s", serverName));
 
     }
 
@@ -783,7 +791,7 @@ public class NettySctpManagementImpl implements Management {
             }
 
             if (server.getIpChannelType() != ipChannelType)
-                throw new Exception(String.format("Server and Accociation has different IP channel type"));
+                throw new Exception(String.format("Server and Association have different IP channel types"));
 
             NettyAssociationImpl association = new NettyAssociationImpl(peerAddress, peerPort, serverName, assocName,
                     ipChannelType);
@@ -812,7 +820,7 @@ public class NettySctpManagementImpl implements Management {
             }
 
             if (logger.isInfoEnabled()) {
-                logger.info(String.format("Added Associoation=%s of type=%s", association.getName(),
+                logger.info(String.format("Added Association=%s of type=%s", association.getName(),
                         association.getAssociationType()));
             }
 
@@ -908,7 +916,7 @@ public class NettySctpManagementImpl implements Management {
             }
 
             if (logger.isInfoEnabled()) {
-                logger.info(String.format("Added Associoation=%s of type=%s", association.getName(),
+                logger.info(String.format("Added Association=%s of type=%s", association.getName(),
                         association.getAssociationType()));
             }
 
@@ -1285,8 +1293,8 @@ public class NettySctpManagementImpl implements Management {
     }
 
     @Override
-    public void setOptionSctpNodelay(Boolean optionSctpNodelay) {
-        this.optionSctpNodelay = optionSctpNodelay;
+    public void setOptionSctpNodelay(Boolean optionSctpNoDelay) {
+        this.optionSctpNodelay = optionSctpNoDelay;
     }
 
     @Override
@@ -1501,7 +1509,7 @@ public class NettySctpManagementImpl implements Management {
 		}
 
 		if (port !=null && (port < 1 || port > 65535)) {
-			throw new Exception("Server host port cannot be less than 1 or more than 65535. But was : " + port);
+			throw new Exception("Exception! Server host port value = " + port + ", but cannot be lower than 1 or higher than 65535.");
 		}
 
 		synchronized (this) {
@@ -1561,7 +1569,7 @@ public class NettySctpManagementImpl implements Management {
 		}
 
 		if (peerPort != null && (peerPort < 1 || peerPort > 65535)) {
-			throw new Exception("Peer port cannot be less than 1 or more than 65535. But was : " + peerPort);
+            throw new Exception("Exception! Peer host port value = " + peerPort + ", but cannot be lower than 1 or higher than 65535.");
 		}
 
 		synchronized (this) {
@@ -1603,7 +1611,7 @@ public class NettySctpManagementImpl implements Management {
 				}
 
 				if ((ipChannelType!=null && newServer.getIpChannelType() != ipChannelType)||(ipChannelType==null && newServer.getIpChannelType() != association.getIpChannelType()))
-					throw new Exception(String.format("Server and Accociation has different IP channel type"));
+					throw new Exception(String.format("Server and Association have different IP channel types"));
 
 				//remove association from current server
 				for (FastList.Node<Server> n = this.servers.head(), end = this.servers.tail(); (n = n.getNext()) != end;) {
@@ -1633,7 +1641,7 @@ public class NettySctpManagementImpl implements Management {
 						Server serverTemp = n.getValue();
 						if (serverTemp.getName().equals(association.getServerName())) {
 							if (serverTemp.getIpChannelType() != ipChannelType)
-								throw new Exception(String.format("Server and Accociation has different IP channel type"));
+								throw new Exception(String.format("Server and Association have different IP channel types"));
 						}
 					}
 
@@ -1663,11 +1671,11 @@ public class NettySctpManagementImpl implements Management {
 		}
 
 		if (hostPort != null && (hostPort < 1 || hostPort > 65535)) {
-			throw new Exception("Host port cannot be less than 1 or more than 65535. But was : " + hostPort);
+            throw new Exception("Exception! Peer host port value = " + hostPort + ", but cannot be lower than 1 or higher than 65535.");
 		}
 
 		if (peerPort != null && (peerPort < 1 || peerPort > 65535)) {
-			throw new Exception("Peer port cannot be less than 1 or more than 65535. But was : " + peerPort);
+            throw new Exception("Exception! Peer port value = " + peerPort + ", but cannot be lower than 1 or higher than 65535.");
 		}
 
 		if (assocName == null) {

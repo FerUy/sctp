@@ -19,6 +19,7 @@
  * Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston,
  * MA 02110-1301, USA.
  */
+
 package org.mobicents.protocols.api;
 
 /**
@@ -90,11 +91,11 @@ public interface AssociationListener {
 
 	/**
 	 * <p>
-	 * The stream id set in outgoing {@link PayloadData} is invalid. This packe
+	 * The stream id set in outgoing {@link PayloadData} is invalid. This packet
 	 * will be dropped after calling the listener.
 	 * </p>
 	 * <p>
-	 * This callback is on same Thread as {@link SelectorThread}. Do not delay
+	 * This callback is on same Thread as @see SelectorThread. Do not delay
 	 * the process here as it will hold all other IO.
 	 * </p>
 	 * 

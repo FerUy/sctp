@@ -3,16 +3,18 @@
 <!ENTITY % BOOK_ENTITIES SYSTEM "SCTP_Stack_User_Guide.ent">
 %BOOK_ENTITIES;
 ]>
-<authorgroup
-	id="authors">
-	<author>
-		<firstname>Amit</firstname>
-		<surname>Bhayani</surname>
-		<email>&AUTHOR.EMAIL.AMIT;</email>
-	</author>
-	<author>
-		<firstname>Sergey</firstname>
-		<surname>Vetyutnev</surname>
-		<email>&AUTHOR.EMAIL.SERGEY;</email>
-	</author>
-</authorgroup>
+<book>
+	<authorgroup
+			id="authors">
+		<author>
+			<firstname>Amit</firstname>
+			<surname>Bhayani</surname>
+			<email>&AUTHOR.EMAIL.AMIT;</email>
+		</author>
+		<author>
+			<firstname>Sergey</firstname>
+			<surname>Vetyutnev</surname>
+			<email>&AUTHOR.EMAIL.SERGEY;</email>
+		</author>
+	</authorgroup>
+</book>

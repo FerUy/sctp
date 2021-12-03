@@ -102,7 +102,7 @@ public class SctpTransferTest {
 		this.management.setSingleThread(true);
 		this.management.start();
         this.management.setConnectDelay(10000);// Try connecting every 10 secs
-		this.management.removeAllResourses();
+		this.management.removeAllResources();
 
 		this.server = this.management.addServer(SERVER_NAME, SERVER_HOST, SERVER_PORT, ipChannelType, false, 0, null);
 		this.serverAssociation = this.management.addServerAssociation(CLIENT_HOST, CLIENT_PORT, SERVER_NAME, SERVER_ASSOCIATION_NAME, ipChannelType);

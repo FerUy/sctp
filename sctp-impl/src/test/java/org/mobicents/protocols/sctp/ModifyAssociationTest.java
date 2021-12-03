@@ -46,8 +46,8 @@ public class ModifyAssociationTest {
     private static final int SERVER_PORT3 = 12356;
     private static final int SERVER_PORT4 = 12357;
 
-	private static final String SERVER_ASSOCIATION_NAME = "serverAsscoiation";
-	private static final String CLIENT_ASSOCIATION_NAME = "clientAsscoiation";
+	private static final String SERVER_ASSOCIATION_NAME = "serverAssociation";
+	private static final String CLIENT_ASSOCIATION_NAME = "clientAssociation";
 
 	private static final String CLIENT_HOST = "127.0.0.1";
     private static final int CLIENT_PORT1 = 12364;
@@ -98,7 +98,7 @@ public class ModifyAssociationTest {
 		this.management.setSingleThread(true);
 		this.management.start();
         this.management.setConnectDelay(1000);
-		this.management.removeAllResourses();
+		this.management.removeAllResources();
 
 		this.server = this.management.addServer(SERVER_NAME, SERVER_HOST, serverPort, ipChannelType, false, 0, null);
 		this.serverAssociation = this.management.addServerAssociation(CLIENT_HOST, clientPort, SERVER_NAME, SERVER_ASSOCIATION_NAME, ipChannelType);

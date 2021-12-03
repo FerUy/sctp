@@ -93,7 +93,7 @@ public class NettySctpServerHandler extends NettySctpChannelInboundHandlerAdapte
 
                     if (!association.isStarted()) {
                         logger.error(String.format(
-                                "Received connect request for Association=%s but not started yet. Droping the connection!",
+                                "Received connect request for Association=%s but not started yet. Dropping the connection!",
                                 association.getName()));
                         channel.close();
                         return;
@@ -169,8 +169,7 @@ public class NettySctpServerHandler extends NettySctpChannelInboundHandlerAdapte
         if (!provisioned) {
             // There is no corresponding Associate provisioned. Lets close the
             // channel here
-            logger.warn(String.format("Received connect request from non provisioned %s:%d address. Closing Channel", host,
-                    port));
+            logger.warn(String.format("Received connect request from non provisioned %s:%d address. Closing Channel", host, port));
             ctx.close();
         }
     }
@@ -185,7 +184,7 @@ public class NettySctpServerHandler extends NettySctpChannelInboundHandlerAdapte
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         // Close the connection when an exception is raised.
-        logger.error("ExceptionCaught for Associtaion: " + this.association.getName() + "\n", cause);
+        logger.error("ExceptionCaught for Association: " + this.association.getName() + "\n", cause);
         ctx.close();
     }
 

@@ -43,8 +43,8 @@ public class ClientAssociationTest {
 	private static final String SERVER_HOST = "127.0.0.1";
 	private static final int SERVER_PORT = 2345;
 
-	private static final String SERVER_ASSOCIATION_NAME = "serverAsscoiation";
-	private static final String CLIENT_ASSOCIATION_NAME = "clientAsscoiation";
+	private static final String SERVER_ASSOCIATION_NAME = "serverAssociation";
+	private static final String CLIENT_ASSOCIATION_NAME = "clientAssociation";
 
 	private static final String CLIENT_HOST = "127.0.0.1";
 	private static final int CLIENT_PORT = 2346;
@@ -91,7 +91,7 @@ public class ClientAssociationTest {
 		this.management.setSingleThread(true);
 		this.management.start();
         this.management.setConnectDelay(10000);// Try connecting every 10 secs
-		this.management.removeAllResourses();
+		this.management.removeAllResources();
 
 		this.server = this.management.addServer(SERVER_NAME, SERVER_HOST, SERVER_PORT, ipChannelType, false, 0, null);
 		this.serverAssociation = this.management.addServerAssociation(CLIENT_HOST, CLIENT_PORT, SERVER_NAME, SERVER_ASSOCIATION_NAME, ipChannelType);

@@ -57,7 +57,7 @@ public class NettyServerImpl implements Server {
     private static final String NAME = "name";
     private static final String HOST_ADDRESS = "hostAddress";
     private static final String HOST_PORT = "hostPort";
-    private static final String IPCHANNEL_TYPE = "ipChannelType";
+    private static final String IP_CHANNEL_TYPE = "ipChannelType";
 
     private static final String ASSOCIATIONS = "associations";
     private static final String EXTRA_HOST_ADDRESS = "extraHostAddress";
@@ -66,7 +66,7 @@ public class NettyServerImpl implements Server {
 
     private static final String STARTED = "started";
 
-    private static final String EXTRA_HOST_ADDRESS_SIZE = "extraHostAddresseSize";
+    private static final String EXTRA_HOST_ADDRESSES_SIZE = "extraHostAddressesSize";
 
     private String name;
     private String hostAddress;
@@ -95,18 +95,22 @@ public class NettyServerImpl implements Server {
     }
 
     /**
-     * @param name
-     * @param ip
-     * @param port
+     * @param serverName
+     * @param hostAddress
+     * @param hostPort
+     * @param ipChannelType
+     * @param acceptAnonymousConnections
+     * @param maxConcurrentConnectionsCount
+     * @param extraHostAddresses
      * @throws IOException
      */
-    public NettyServerImpl(String name, String hostAddress, int hostport, IpChannelType ipChannelType,
+    public NettyServerImpl(String serverName, String hostAddress, int hostPort, IpChannelType ipChannelType,
             boolean acceptAnonymousConnections, int maxConcurrentConnectionsCount, String[] extraHostAddresses)
             throws IOException {
         super();
-        this.name = name;
+        this.name = serverName;
         this.hostAddress = hostAddress;
-        this.hostport = hostport;
+        this.hostport = hostPort;
         this.ipChannelType = ipChannelType;
         this.acceptAnonymousConnections = acceptAnonymousConnections;
         this.maxConcurrentConnectionsCount = maxConcurrentConnectionsCount;
@@ -288,7 +292,7 @@ public class NettyServerImpl implements Server {
         this.started = false;
 
         if (logger.isInfoEnabled()) {
-            logger.info(String.format("Stoped Server=%s", this.name));
+            logger.info(String.format("Stopped Server=%s", this.name));
         }
 
         // Stop underlying channel and wait till its done
@@ -401,14 +405,14 @@ public class NettyServerImpl implements Server {
             server.started = xml.getAttribute(STARTED, false);
             server.hostAddress = xml.getAttribute(HOST_ADDRESS, "");
             server.hostport = xml.getAttribute(HOST_PORT, 0);
-            server.ipChannelType = IpChannelType.getInstance(xml.getAttribute(IPCHANNEL_TYPE, IpChannelType.SCTP.getCode()));
+            server.ipChannelType = IpChannelType.getInstance(xml.getAttribute(IP_CHANNEL_TYPE, IpChannelType.SCTP.getCode()));
             if (server.ipChannelType == null)
                 throw new XMLStreamException("Bad value for server.ipChannelType");
 
             server.acceptAnonymousConnections = xml.getAttribute(ACCEPT_ANONYMOUS_CONNECTIONS, false);
             server.maxConcurrentConnectionsCount = xml.getAttribute(MAX_CONCURRENT_CONNECTIONS_COUNT, 0);
 
-            int extraHostAddressesSize = xml.getAttribute(EXTRA_HOST_ADDRESS_SIZE, 0);
+            int extraHostAddressesSize = xml.getAttribute(EXTRA_HOST_ADDRESSES_SIZE, 0);
             server.extraHostAddresses = new String[extraHostAddressesSize];
 
             for (int i = 0; i < extraHostAddressesSize; i++) {
@@ -424,11 +428,11 @@ public class NettyServerImpl implements Server {
             xml.setAttribute(STARTED, server.started);
             xml.setAttribute(HOST_ADDRESS, server.hostAddress);
             xml.setAttribute(HOST_PORT, server.hostport);
-            xml.setAttribute(IPCHANNEL_TYPE, server.ipChannelType.getCode());
+            xml.setAttribute(IP_CHANNEL_TYPE, server.ipChannelType.getCode());
             xml.setAttribute(ACCEPT_ANONYMOUS_CONNECTIONS, server.acceptAnonymousConnections);
             xml.setAttribute(MAX_CONCURRENT_CONNECTIONS_COUNT, server.maxConcurrentConnectionsCount);
 
-            xml.setAttribute(EXTRA_HOST_ADDRESS_SIZE, server.extraHostAddresses != null ? server.extraHostAddresses.length : 0);
+            xml.setAttribute(EXTRA_HOST_ADDRESSES_SIZE, server.extraHostAddresses != null ? server.extraHostAddresses.length : 0);
             if (server.extraHostAddresses != null) {
                 for (String s : server.extraHostAddresses) {
                     xml.add(s, EXTRA_HOST_ADDRESS, String.class);

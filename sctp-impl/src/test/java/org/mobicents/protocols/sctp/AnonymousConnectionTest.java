@@ -98,19 +98,19 @@ public class AnonymousConnectionTest implements ServerListener {
 		this.management.setSingleThread(true);
 		this.management.start();
         this.management.setConnectDelay(CONNECT_DELAY);// Try connecting every x secs
-		this.management.removeAllResourses();
+		this.management.removeAllResources();
 
 		this.management2 = new ManagementImpl("server-management2");
 		this.management2.setSingleThread(true);
 		this.management2.start();
         this.management2.setConnectDelay(CONNECT_DELAY);// Try connecting every x secs
-		this.management2.removeAllResourses();
+		this.management2.removeAllResources();
 
 		this.management3 = new ManagementImpl("server-management3");
 		this.management3.setSingleThread(true);
 		this.management3.start();
         this.management3.setConnectDelay(CONNECT_DELAY);// Try connecting every x secs
-		this.management3.removeAllResourses();
+		this.management3.removeAllResources();
 
 		this.server = this.management.addServer(SERVER_NAME, SERVER_HOST, SERVER_PORT, ipChannelType, true, 2, null);
 		this.clientAssociation1 = this.management.addAssociation(CLIENT_HOST, CLIENT_PORT1, SERVER_HOST, SERVER_PORT, CLIENT_ASSOCIATION_NAME1, ipChannelType,
